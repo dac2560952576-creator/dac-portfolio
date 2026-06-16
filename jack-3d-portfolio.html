@@ -1,0 +1,690 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Jack -- 3D Creator</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Kanit:wght@300;400;500;600;700;800;900&display=swap" rel="stylesheet">
+  <script src="https://unpkg.com/react@18/umd/react.production.min.js" crossorigin></script>
+  <script src="https://unpkg.com/react-dom@18/umd/react-dom.production.min.js" crossorigin></script>
+  <script src="https://unpkg.com/@babel/standalone/babel.min.js"></script>
+  <script src="https://unpkg.com/framer-motion@10.16.4/dist/framer-motion.js"></script>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <script>
+    tailwind.config = {
+      theme: {
+        extend: {
+          fontFamily: {
+            kanit: ['Kanit', 'sans-serif'],
+          },
+          colors: {
+            dark: '#0C0C0C',
+            light: '#D7E2EA',
+          },
+        },
+      },
+    }
+  </script>
+  <style>
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
+    
+    html, body, #root {
+      background: #0C0C0C;
+      min-height: 100%;
+    }
+    
+    body {
+      font-family: 'Kanit', sans-serif;
+      -webkit-font-smoothing: antialiased;
+      -moz-osx-font-smoothing: grayscale;
+      overflow-x: hidden;
+    }
+    
+    .hero-heading {
+      background: linear-gradient(180deg, #646973 0%, #BBCCD7 100%);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      background-clip: text;
+    }
+    
+    ::-webkit-scrollbar {
+      width: 8px;
+    }
+    
+    ::-webkit-scrollbar-track {
+      background: #0C0C0C;
+    }
+    
+    ::-webkit-scrollbar-thumb {
+      background: #333;
+      border-radius: 4px;
+    }
+    
+    ::-webkit-scrollbar-thumb:hover {
+      background: #555;
+    }
+    
+    html {
+      scroll-behavior: smooth;
+    }
+  </style>
+</head>
+<body>
+  <div id="root"></div>
+  
+  <script type="text/babel">
+    const { useState, useEffect, useRef, createElement: h } = React;
+    const { motion, useScroll, useTransform, useInView } = window.Motion;
+
+    // ContactButton Component
+    const ContactButton = ({ className = '' }) => {
+      return (
+        <motion.a
+          href="#contact"
+          className={`
+            inline-flex items-center justify-center
+            px-8 py-3 md:px-12 md:py-4
+            text-xs md:text-base
+            font-medium uppercase tracking-widest text-white
+            rounded-full
+            transition-all duration-300
+            hover:scale-105 hover:shadow-lg
+            ${className}
+          `}
+          style={{
+            background: 'linear-gradient(123deg, #18011F 0%, #B600A8 25%, #7621B0 50%, #BE4C00 100%)',
+            boxShadow: `inset 0 2px 4px rgba(255,255,255,0.15), inset 0 -2px 4px rgba(0,0,0,0.3), 0 0 0 2px rgba(255,255,255,0.8)`,
+          }}
+          whileHover={{ scale: 1.05 }}
+          whileTap={{ scale: 0.98 }}
+        >
+          Contact
+        </motion.a>
+      );
+    };
+
+    // External Link Icon
+    const ExternalLinkIcon = () => (
+      <svg 
+        width="14" 
+        height="14" 
+        viewBox="0 0 24 24" 
+        fill="none" 
+        stroke="currentColor" 
+        strokeWidth="2" 
+        strokeLinecap="round" 
+        strokeLinejoin="round"
+      >
+        <path d="M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6" />
+        <polyline points="15 3 21 3 21 9" />
+        <line x1="10" y1="14" x2="21" y2="3" />
+      </svg>
+    );
+
+    // LiveProjectButton Component
+    const LiveProjectButton = ({ href = '#', className = '' }) => {
+      return (
+        <motion.a
+          href={href}
+          target="_blank"
+          rel="noopener noreferrer"
+          className={`
+            inline-flex items-center gap-2
+            px-6 py-2.5
+            text-xs md:text-sm
+            font-medium uppercase tracking-widest
+            text-[#D7E2EA] border-2 border-[#D7E2EA]
+            rounded-full
+            transition-all duration-300
+            hover:bg-[#D7E2EA]/10
+            ${className}
+          `}
+          whileHover={{ scale: 1.02 }}
+          whileTap={{ scale: 0.98 }}
+        >
+          Live Project
+          <ExternalLinkIcon />
+        </motion.a>
+      );
+    };
+
+    // FadeIn Component
+    const FadeIn = ({ children, delay = 0, duration = 0.7, x = 0, y = 30, className = '' }) => {
+      return (
+        <motion.div
+          initial={{ opacity: 0, x, y }}
+          whileInView={{ opacity: 1, x: 0, y: 0 }}
+          viewport={{ once: true, margin: '50px', amount: 0 }}
+          transition={{
+            duration,
+            delay,
+            ease: [0.25, 0.1, 0.25, 1],
+          }}
+          className={className}
+        >
+          {children}
+        </motion.div>
+      );
+    };
+
+    // Magnet Component
+    const Magnet = ({ children, padding = 150, strength = 3, className = '' }) => {
+      const [position, setPosition] = useState({ x: 0, y: 0 });
+      const [isActive, setIsActive] = useState(false);
+      const ref = useRef(null);
+
+      const handleMouseMove = (e) => {
+        if (!ref.current) return;
+        
+        const rect = ref.current.getBoundingClientRect();
+        const centerX = rect.left + rect.width / 2;
+        const centerY = rect.top + rect.height / 2;
+        
+        const distanceX = e.clientX - centerX;
+        const distanceY = e.clientY - centerY;
+        const distance = Math.sqrt(distanceX * distanceX + distanceY * distanceY);
+        
+        if (distance < padding) {
+          setIsActive(true);
+          setPosition({
+            x: distanceX / strength,
+            y: distanceY / strength,
+          });
+        } else {
+          setIsActive(false);
+          setPosition({ x: 0, y: 0 });
+        }
+      };
+
+      const handleMouseLeave = () => {
+        setIsActive(false);
+        setPosition({ x: 0, y: 0 });
+      };
+
+      return (
+        <motion.div
+          ref={ref}
+          onMouseMove={handleMouseMove}
+          onMouseLeave={handleMouseLeave}
+          animate={{
+            x: position.x,
+            y: position.y,
+          }}
+          transition={{
+            type: 'tween',
+            ease: isActive ? 'easeOut' : 'easeInOut',
+            duration: isActive ? 0.3 : 0.6,
+          }}
+          className={className}
+          style={{ willChange: 'transform' }}
+        >
+          {children}
+        </motion.div>
+      );
+    };
+
+    // AnimatedText Component
+    const AnimatedText = ({ text, className = '' }) => {
+      const containerRef = useRef(null);
+      const words = text.split(' ');
+
+      return (
+        <p ref={containerRef} className={className}>
+          {words.map((word, wordIndex) => (
+            <span key={wordIndex} className="inline-block mr-[0.25em]">
+              {word.split('').map((char, charIndex) => (
+                <span key={charIndex} className="inline-block">
+                  {char}
+                </span>
+              ))}
+            </span>
+          ))}
+        </p>
+      );
+    };
+
+    // Hero Section
+    const HeroSection = () => {
+      const [scrollY, setScrollY] = useState(0);
+
+      useEffect(() => {
+        const handleScroll = () => setScrollY(window.scrollY);
+        window.addEventListener('scroll', handleScroll, { passive: true });
+        return () => window.removeEventListener('scroll', handleScroll);
+      }, []);
+
+      const heroOpacity = Math.max(0, 1 - scrollY / 600);
+      const navLinks = ['About', 'Price', 'Projects', 'Contact'];
+
+      return (
+        <section 
+          className="relative h-screen flex flex-col overflow-x-clip"
+          style={{ opacity: heroOpacity }}
+        >
+          {/* Navbar */}
+          <FadeIn delay={0} y={-20}>
+            <nav className="flex justify-between items-center px-6 md:px-10 pt-6 md:pt-8">
+              {navLinks.map((link) => (
+                <a
+                  key={link}
+                  href={`#${link.toLowerCase()}`}
+                  className="text-[#D7E2EA] font-medium uppercase tracking-wider text-sm md:text-lg lg:text-[1.4rem] transition-opacity duration-200 hover:opacity-70"
+                >
+                  {link}
+                </a>
+              ))}
+            </nav>
+          </FadeIn>
+
+          {/* Hero Heading */}
+          <FadeIn delay={0.15} y={40} className="overflow-hidden">
+            <h1 className="hero-heading font-black uppercase tracking-tight leading-none whitespace-nowrap w-full text-[14vw] sm:text-[15vw] md:text-[16vw] lg:text-[17.5vw] mt-6 sm:mt-4 md:-mt-5 text-center">
+              Hi, i'm jack
+            </h1>
+          </FadeIn>
+
+          {/* Hero Portrait - Magnet Effect */}
+          <FadeIn delay={0.6} y={30} className="absolute left-1/2 -translate-x-1/2 z-10 w-[280px] sm:w-[360px] md:w-[440px] lg:w-[520px] top-1/2 -translate-y-1/2 sm:top-auto sm:translate-y-0 sm:bottom-0">
+            <Magnet padding={150} strength={3}>
+              <img
+                src="https://shrug-person-78902957.figma.site/_components/v2/d24c01ad3a56fc65e942a1f501eb73db42d7cf9a/Rectangle_40443.81459862.png"
+                alt="Jack - 3D Creator"
+                className="w-full h-auto object-contain"
+                loading="lazy"
+              />
+            </Magnet>
+          </FadeIn>
+
+          {/* Bottom Bar */}
+          <div className="flex justify-between items-end pb-7 sm:pb-8 md:pb-10 px-6 md:px-10 mt-auto">
+            <FadeIn delay={0.35} y={20}>
+              <p 
+                className="text-[#D7E2EA] font-light uppercase tracking-wide leading-snug max-w-[160px] sm:max-w-[220px] md:max-w-[260px]"
+                style={{ fontSize: 'clamp(0.75rem, 1.4vw, 1.5rem)' }}
+              >
+                a 3d creator driven by crafting striking and unforgettable projects
+              </p>
+            </FadeIn>
+
+            <FadeIn delay={0.5} y={20}>
+              <ContactButton />
+            </FadeIn>
+          </div>
+        </section>
+      );
+    };
+
+    // Marquee Section
+    const MarqueeSection = () => {
+      const sectionRef = useRef(null);
+      const [scrollOffset, setScrollOffset] = useState(0);
+
+      const marqueeImages = [
+        'https://images.unsplash.com/photo-1618005182384-a83a8bd57fbe?w=420&h=270&fit=crop',
+        'https://images.unsplash.com/photo-1614850523459-c2f4c699c52e?w=420&h=270&fit=crop',
+        'https://images.unsplash.com/photo-1634017839464-5c339e1a0d5c?w=420&h=270&fit=crop',
+        'https://images.unsplash.com/photo-1614728263952-84ea256f9679?w=420&h=270&fit=crop',
+        'https://images.unsplash.com/photo-1550684848-fac1c5b4e853?w=420&h=270&fit=crop',
+        'https://images.unsplash.com/photo-1579546929518-9e396f3cc809?w=420&h=270&fit=crop',
+        'https://images.unsplash.com/photo-1618172193763-c511deb635ca?w=420&h=270&fit=crop',
+        'https://images.unsplash.com/photo-1614850715649-1d0106293bd1?w=420&h=270&fit=crop',
+        'https://images.unsplash.com/photo-1617791160505-6f00504e3519?w=420&h=270&fit=crop',
+        'https://images.unsplash.com/photo-1620641788421-7a1c342ea42e?w=420&h=270&fit=crop',
+        'https://images.unsplash.com/photo-1618172193622-ae2d025f4032?w=420&h=270&fit=crop',
+        'https://images.unsplash.com/photo-1618005198919-d3d4b5a92ead?w=420&h=270&fit=crop',
+        'https://images.unsplash.com/photo-1614851099518-94f3bb5e0ac3?w=420&h=270&fit=crop',
+        'https://images.unsplash.com/photo-1614853316476-de00d14cb1fc?w=420&h=270&fit=crop',
+        'https://images.unsplash.com/photo-1618172193763-c511deb635ca?w=420&h=270&fit=crop',
+        'https://images.unsplash.com/photo-1614850715649-1d0106293bd1?w=420&h=270&fit=crop',
+        'https://images.unsplash.com/photo-1617791160505-6f00504e3519?w=420&h=270&fit=crop',
+        'https://images.unsplash.com/photo-1620641788421-7a1c342ea42e?w=420&h=270&fit=crop',
+        'https://images.unsplash.com/photo-1618172193622-ae2d025f4032?w=420&h=270&fit=crop',
+        'https://images.unsplash.com/photo-1618005198919-d3d4b5a92ead?w=420&h=270&fit=crop',
+        'https://images.unsplash.com/photo-1614851099518-94f3bb5e0ac3?w=420&h=270&fit=crop',
+      ];
+
+      const row1Images = marqueeImages.slice(0, 11);
+      const row2Images = marqueeImages.slice(11);
+      const tripleRow1 = [...row1Images, ...row1Images, ...row1Images];
+      const tripleRow2 = [...row2Images, ...row2Images, ...row2Images];
+
+      useEffect(() => {
+        const handleScroll = () => {
+          if (!sectionRef.current) return;
+          const rect = sectionRef.current.getBoundingClientRect();
+          const sectionTop = rect.top + window.scrollY;
+          const offset = (window.scrollY - sectionTop + window.innerHeight) * 0.3;
+          setScrollOffset(offset);
+        };
+
+        window.addEventListener('scroll', handleScroll, { passive: true });
+        handleScroll();
+        return () => window.removeEventListener('scroll', handleScroll);
+      }, []);
+
+      return (
+        <section 
+          ref={sectionRef}
+          className="bg-[#0C0C0C] pt-24 sm:pt-32 md:pt-40 pb-10 overflow-hidden"
+        >
+          {/* Row 1 - Moves RIGHT on scroll */}
+          <div className="flex gap-3 mb-3">
+            <motion.div 
+              className="flex gap-3"
+              style={{ x: scrollOffset - 200 }}
+            >
+              {tripleRow1.map((src, index) => (
+                <div
+                  key={`row1-${index}`}
+                  className="flex-shrink-0 w-[280px] sm:w-[350px] md:w-[420px] h-[180px] sm:h-[220px] md:h-[270px] rounded-2xl overflow-hidden"
+                >
+                  <img
+                    src={src}
+                    alt={`3D Work ${index + 1}`}
+                    className="w-full h-full object-cover"
+                    loading="lazy"
+                  />
+                </div>
+              ))}
+            </motion.div>
+          </div>
+
+          {/* Row 2 - Moves LEFT on scroll */}
+          <div className="flex gap-3">
+            <motion.div 
+              className="flex gap-3"
+              style={{ x: -(scrollOffset - 200) }}
+            >
+              {tripleRow2.map((src, index) => (
+                <div
+                  key={`row2-${index}`}
+                  className="flex-shrink-0 w-[280px] sm:w-[350px] md:w-[420px] h-[180px] sm:h-[220px] md:h-[270px] rounded-2xl overflow-hidden"
+                >
+                  <img
+                    src={src}
+                    alt={`3D Work ${index + 12}`}
+                    className="w-full h-full object-cover"
+                    loading="lazy"
+                  />
+                </div>
+              ))}
+            </motion.div>
+          </div>
+        </section>
+      );
+    };
+
+    // About Section
+    const AboutSection = () => {
+      const cornerImages = {
+        moon: 'https://images.unsplash.com/photo-1532693322450-2cb5c511067d?w=200&h=200&fit=crop',
+        object3d: 'https://images.unsplash.com/photo-1618005182384-a83a8bd57fbe?w=200&h=200&fit=crop',
+        lego: 'https://images.unsplash.com/photo-1585366119957-e9730b6d0f60?w=200&h=200&fit=crop',
+        group: 'https://images.unsplash.com/photo-1614728263952-84ea256f9679?w=200&h=200&fit=crop',
+      };
+
+      const aboutText = "With more than five years of experience in design, i focus on branding, web design, and user experience, i truly enjoy working with businesses that aim to stand out and present their best image. Let's build something incredible together!";
+
+      return (
+        <section id="about" className="min-h-screen px-5 sm:px-8 md:px-10 py-20 flex flex-col items-center justify-center relative">
+          {/* Corner Images */}
+          <FadeIn delay={0} y={20} className="absolute top-20 left-5 sm:left-8 md:left-10 w-20 sm:w-28 md:w-36">
+            <img 
+              src={cornerImages.moon} 
+              alt="Decorative 3D Moon" 
+              className="w-full h-auto rounded-2xl opacity-80"
+              loading="lazy"
+            />
+          </FadeIn>
+          
+          <FadeIn delay={0.1} y={20} className="absolute top-32 right-5 sm:right-8 md:right-10 w-16 sm:w-24 md:w-32">
+            <img 
+              src={cornerImages.object3d} 
+              alt="Decorative 3D Object" 
+              className="w-full h-auto rounded-2xl opacity-80"
+              loading="lazy"
+            />
+          </FadeIn>
+          
+          <FadeIn delay={0.2} y={20} className="absolute bottom-40 left-10 sm:left-16 md:left-20 w-14 sm:w-20 md:w-28">
+            <img 
+              src={cornerImages.lego} 
+              alt="Decorative Lego" 
+              className="w-full h-auto rounded-2xl opacity-80"
+              loading="lazy"
+            />
+          </FadeIn>
+          
+          <FadeIn delay={0.3} y={20} className="absolute bottom-32 right-10 sm:right-16 md:right-20 w-18 sm:w-26 md:w-32">
+            <img 
+              src={cornerImages.group} 
+              alt="Decorative Group" 
+              className="w-full h-auto rounded-2xl opacity-80"
+              loading="lazy"
+            />
+          </FadeIn>
+
+          {/* Heading */}
+          <FadeIn delay={0} y={40} className="mb-10 sm:mb-14 md:mb-16">
+            <h2 
+              className="hero-heading font-black uppercase leading-none tracking-tight text-center"
+              style={{ fontSize: 'clamp(3rem, 12vw, 160px)' }}
+            >
+              About me
+            </h2>
+          </FadeIn>
+
+          {/* Animated Paragraph */}
+          <div className="mb-16 sm:mb-20 md:mb-24 max-w-[560px]">
+            <p 
+              className="text-[#D7E2EA] font-medium text-center leading-relaxed"
+              style={{ fontSize: 'clamp(1rem, 2vw, 1.35rem)' }}
+            >
+              <AnimatedText text={aboutText} />
+            </p>
+          </div>
+
+          {/* Contact Button */}
+          <FadeIn delay={0.2} y={20}>
+            <ContactButton />
+          </FadeIn>
+        </section>
+      );
+    };
+
+    // Services Section
+    const ServicesSection = () => {
+      const services = [
+        { number: '01', name: '3D Modeling', description: 'Creating detailed and precise 3D models for products, characters, and environments that bring your vision to life with stunning accuracy.' },
+        { number: '02', name: 'Rendering', description: 'High-quality photorealistic renders that showcase your projects in the best light, perfect for presentations and marketing materials.' },
+        { number: '03', name: 'Motion Design', description: 'Dynamic animations and visual effects that add life to your brand, from logo animations to full cinematic sequences.' },
+        { number: '04', name: 'Branding', description: 'Comprehensive brand identity development including visual systems, guidelines, and assets that make your business memorable.' },
+        { number: '05', name: 'Web Design', description: 'Modern, responsive web designs that combine aesthetics with functionality to create engaging digital experiences.' },
+      ];
+
+      return (
+        <section 
+          id="price"
+          className="bg-white rounded-t-[40px] sm:rounded-t-[50px] md:rounded-t-[60px] px-5 sm:px-8 md:px-10 py-20 sm:py-24 md:py-32"
+        >
+          {/* Heading */}
+          <FadeIn delay={0} y={40}>
+            <h2 
+              className="text-[#0C0C0C] font-black uppercase text-center mb-16 sm:mb-20 md:mb-28"
+              style={{ fontSize: 'clamp(3rem, 12vw, 160px)' }}
+            >
+              Services
+            </h2>
+          </FadeIn>
+
+          {/* Services List */}
+          <div className="max-w-5xl mx-auto">
+            {services.map((service, index) => (
+              <FadeIn key={service.number} delay={index * 0.1} y={30}>
+                <div 
+                  className={`py-8 sm:py-10 md:py-12 flex flex-col sm:flex-row gap-4 sm:gap-8 md:gap-12 ${index !== services.length - 1 ? 'border-b' : ''}`}
+                  style={{ borderColor: 'rgba(12,12,12,0.15)' }}
+                >
+                  {/* Number */}
+                  <span 
+                    className="text-[#0C0C0C] font-black flex-shrink-0"
+                    style={{ fontSize: 'clamp(3rem, 10vw, 140px)', lineHeight: 0.9 }}
+                  >
+                    {service.number}
+                  </span>
+
+                  {/* Content */}
+                  <div className="flex flex-col gap-2 sm:gap-3 pt-2">
+                    <h3 
+                      className="text-[#0C0C0C] font-medium uppercase"
+                      style={{ fontSize: 'clamp(1rem, 2.2vw, 2.1rem)' }}
+                    >
+                      {service.name}
+                    </h3>
+                    <p 
+                      className="text-[#0C0C0C] font-light leading-relaxed max-w-2xl opacity-60"
+                      style={{ fontSize: 'clamp(0.85rem, 1.6vw, 1.25rem)' }}
+                    >
+                      {service.description}
+                    </p>
+                  </div>
+                </div>
+              </FadeIn>
+            ))}
+          </div>
+        </section>
+      );
+    };
+
+    // Projects Section
+    const ProjectsSection = () => {
+      const projects = [
+        { number: '001', category: '3D MODELING', name: 'Neon City', images: ['https://images.unsplash.com/photo-1618005182384-a83a8bd57fbe?w=600&h=400&fit=crop', 'https://images.unsplash.com/photo-1614850523459-c2f4c699c52e?w=600&h=400&fit=crop'] },
+        { number: '002', category: 'RENDERING', name: 'Crystal Dreams', images: ['https://images.unsplash.com/photo-1634017839464-5c339e1a0d5c?w=600&h=400&fit=crop', 'https://images.unsplash.com/photo-1614728263952-84ea256f9679?w=600&h=400&fit=crop'] },
+        { number: '003', category: 'MOTION DESIGN', name: 'Fluid Forms', images: ['https://images.unsplash.com/photo-1550684848-fac1c5b4e853?w=600&h=400&fit=crop', 'https://images.unsplash.com/photo-1579546929518-9e396f3cc809?w=600&h=400&fit=crop'] },
+      ];
+
+      return (
+        <section 
+          id="projects"
+          className="bg-[#0C0C0C] rounded-t-[40px] sm:rounded-t-[50px] md:rounded-t-[60px] -mt-10 sm:-mt-12 md:-mt-14 relative z-10 py-20 sm:py-24 md:py-32"
+        >
+          {/* Heading */}
+          <FadeIn delay={0} y={40} className="px-5 sm:px-8 md:px-10 mb-16 sm:mb-20 md:mb-28">
+            <h2 
+              className="hero-heading font-black uppercase text-center"
+              style={{ fontSize: 'clamp(3rem, 12vw, 160px)' }}
+            >
+              Project
+            </h2>
+          </FadeIn>
+
+          {/* Stacking Cards */}
+          <div className="px-5 sm:px-8 md:px-10 space-y-8">
+            {projects.map((project, index) => (
+              <ProjectCard key={project.number} project={project} index={index} totalCards={projects.length} />
+            ))}
+          </div>
+        </section>
+      );
+    };
+
+    // Project Card Component
+    const ProjectCard = ({ project, index, totalCards }) => {
+      const cardRef = useRef(null);
+      const { scrollYProgress } = useScroll({
+        target: cardRef,
+        offset: ['start end', 'end start'],
+      });
+
+      const targetScale = 1 - (totalCards - 1 - index) * 0.03;
+      const scale = useTransform(scrollYProgress, [0, 0.5], [0.95, targetScale]);
+      const topOffset = index * 28;
+
+      return (
+        <div 
+          ref={cardRef}
+          className="h-[85vh] sticky"
+          style={{ top: `${96 + topOffset}px` }}
+        >
+          <motion.div 
+            className="h-full rounded-[40px] sm:rounded-[50px] md:rounded-[60px] border-2 border-[#D7E2EA] bg-[#0C0C0C] p-4 sm:p-6 md:p-8 flex flex-col"
+            style={{ 
+              scale,
+              boxShadow: '0 -20px 60px rgba(0,0,0,0.5)',
+            }}
+          >
+            {/* Top Row */}
+            <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4 mb-6 sm:mb-8">
+              <div className="flex items-center gap-4 sm:gap-6">
+                <span 
+                  className="text-[#D7E2EA] font-black"
+                  style={{ fontSize: 'clamp(2rem, 6vw, 80px)' }}
+                >
+                  {project.number}
+                </span>
+                <span 
+                  className="text-[#D7E2EA]/60 font-medium uppercase tracking-wider"
+                  style={{ fontSize: 'clamp(0.75rem, 1.5vw, 1rem)' }}
+                >
+                  {project.category}
+                </span>
+              </div>
+              
+              <div className="flex items-center gap-4 sm:gap-6 w-full sm:w-auto justify-between sm:justify-end">
+                <h3 
+                  className="text-[#D7E2EA] font-bold uppercase"
+                  style={{ fontSize: 'clamp(1.5rem, 4vw, 2.5rem)' }}
+                >
+                  {project.name}
+                </h3>
+                <LiveProjectButton />
+              </div>
+            </div>
+
+            {/* Bottom Row - Images */}
+            <div className="flex-1 grid grid-cols-1 md:grid-cols-2 gap-4 sm:gap-6 min-h-0">
+              {project.images.map((image, imgIndex) => (
+                <div 
+                  key={imgIndex}
+                  className="relative rounded-2xl sm:rounded-3xl overflow-hidden h-full min-h-[200px] sm:min-h-0"
+                >
+                  <img
+                    src={image}
+                    alt={`${project.name} - View ${imgIndex + 1}`}
+                    className="w-full h-full object-cover"
+                    loading="lazy"
+                  />
+                  <div className="absolute inset-0 bg-gradient-to-t from-[#0C0C0C]/30 to-transparent" />
+                </div>
+              ))}
+            </div>
+          </motion.div>
+        </div>
+      );
+    };
+
+    // Main App
+    const App = () => {
+      return (
+        <main className="bg-[#0C0C0C] min-h-screen overflow-x-clip">
+          <HeroSection />
+          <MarqueeSection />
+          <AboutSection />
+          <ServicesSection />
+          <ProjectsSection />
+        </main>
+      );
+    };
+
+    const root = ReactDOM.createRoot(document.getElementById('root'));
+    root.render(<App />);
+  </script>
+</body>
+</html>
