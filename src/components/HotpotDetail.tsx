@@ -2,8 +2,15 @@ import { useState, useCallback } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import BrandText from './BrandText';
 import SpotlightHeading from './SpotlightHeading';
+import { assetUrl } from '../utils/assetUrl';
 
 const navLinks = ['About', 'Projects', 'Contact'];
+const Q_PNG = assetUrl('Q.png');
+const W_PNG = assetUrl('W.png');
+const E_PNG = assetUrl('E.png');
+const R_PNG = assetUrl('R.png');
+const T_PNG = assetUrl('T.png');
+const Y_PNG = assetUrl('Y.png');
 
 export default function HotpotDetail({ onBack, onGoHome, onNavigateContact }: { onBack: () => void; onGoHome: () => void; onNavigateContact: () => void }) {
   const [hovered, setHovered] = useState<string | null>(null);
@@ -102,7 +109,7 @@ export default function HotpotDetail({ onBack, onGoHome, onNavigateContact }: { 
         >
           <div className="w-full overflow-hidden rounded-3xl border border-[#D8D4CE] p-6 sm:p-8 md:w-[75%]"
             style={{ background: '#F0EDE8', boxShadow: '0 0 40px rgba(182,0,168,0.08)' }}>
-            <img src="/Q.png" alt="Hotpot App main screen" className="w-full rounded-2xl object-cover" />
+            <img src={Q_PNG} alt="Hotpot App main screen" className="w-full rounded-2xl object-cover" />
           </div>
           <div className="flex flex-col justify-center gap-4 md:w-[22%]">
             <span className="text-xs font-medium uppercase tracking-[0.2em] text-[#D7E2EA]/30">Overview</span>
@@ -122,7 +129,7 @@ export default function HotpotDetail({ onBack, onGoHome, onNavigateContact }: { 
         >
           <div className="w-full overflow-hidden rounded-3xl border border-[#D8D4CE] p-6 sm:p-8 md:w-[75%]"
             style={{ background: '#F0EDE8', boxShadow: '0 0 40px rgba(182,0,168,0.08)' }}>
-            <img src="/W.png" alt="Menu browsing screen" className="w-full rounded-2xl object-cover" />
+            <img src={W_PNG} alt="Menu browsing screen" className="w-full rounded-2xl object-cover" />
           </div>
           <div className="flex flex-col justify-center gap-4 md:w-[22%] md:pl-8">
             <span className="text-xs font-medium uppercase tracking-[0.2em] text-[#D7E2EA]/30">Menu & Browsing</span>
@@ -142,7 +149,7 @@ export default function HotpotDetail({ onBack, onGoHome, onNavigateContact }: { 
         >
           <div className="w-full overflow-hidden rounded-3xl border border-[#D8D4CE] p-6 sm:p-8 md:w-[80%]"
             style={{ background: '#F0EDE8', boxShadow: '0 0 40px rgba(182,0,168,0.08)' }}>
-            <img src="/E.png" alt="Table ordering interface" className="w-full rounded-2xl object-cover" />
+            <img src={E_PNG} alt="Table ordering interface" className="w-full rounded-2xl object-cover" />
           </div>
           <div className="flex flex-col justify-center gap-4 md:w-[17%]">
             <span className="text-xs font-medium uppercase tracking-[0.2em] text-[#D7E2EA]/30">Table Ordering</span>
@@ -162,7 +169,7 @@ export default function HotpotDetail({ onBack, onGoHome, onNavigateContact }: { 
         >
           <div className="w-full overflow-hidden rounded-3xl border border-[#D8D4CE] p-6 sm:p-8 md:w-[65%]"
             style={{ background: '#F0EDE8', boxShadow: '0 0 40px rgba(182,0,168,0.08)' }}>
-            <img src="/R.png" alt="Order tracking screen" className="w-full rounded-2xl object-cover" />
+            <img src={R_PNG} alt="Order tracking screen" className="w-full rounded-2xl object-cover" />
           </div>
           <div className="flex flex-col justify-center gap-4 md:w-[30%] md:pl-8">
             <span className="text-xs font-medium uppercase tracking-[0.2em] text-[#D7E2EA]/30">Order Tracking</span>
@@ -182,7 +189,7 @@ export default function HotpotDetail({ onBack, onGoHome, onNavigateContact }: { 
         >
           <div className="w-full overflow-hidden rounded-3xl border border-[#D8D4CE] p-6 sm:p-8 md:w-[75%]"
             style={{ background: '#F0EDE8', boxShadow: '0 0 40px rgba(182,0,168,0.08)' }}>
-            <img src="/T.png" alt="Payment and checkout" className="w-full rounded-2xl object-cover" />
+            <img src={T_PNG} alt="Payment and checkout" className="w-full rounded-2xl object-cover" />
           </div>
           <div className="flex flex-col justify-center gap-4 md:w-[22%]">
             <span className="text-xs font-medium uppercase tracking-[0.2em] text-[#D7E2EA]/30">Checkout</span>
@@ -202,7 +209,7 @@ export default function HotpotDetail({ onBack, onGoHome, onNavigateContact }: { 
         >
           <div className="w-full overflow-hidden rounded-3xl border border-[#D8D4CE] p-6 sm:p-8 md:w-[65%]"
             style={{ background: '#F0EDE8', boxShadow: '0 0 40px rgba(182,0,168,0.08)' }}>
-            <img src="/Y.png" alt="Design system overview" className="w-full rounded-2xl object-cover" />
+            <img src={Y_PNG} alt="Design system overview" className="w-full rounded-2xl object-cover" />
           </div>
           <div className="flex flex-col justify-center gap-4 md:w-[30%] md:pl-8">
             <span className="text-xs font-medium uppercase tracking-[0.2em] text-[#D7E2EA]/30">Design System</span>

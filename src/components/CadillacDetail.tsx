@@ -2,8 +2,14 @@ import { useState, useCallback } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import BrandText from './BrandText';
 import SpotlightHeading from './SpotlightHeading';
+import { assetUrl } from '../utils/assetUrl';
 
 const navLinks = ['About', 'Projects', 'Contact'];
+const QQ_PNG = assetUrl('QQ.png');
+const WW_PNG = assetUrl('WW.png');
+const EE_PNG = assetUrl('EE.png');
+const RR_PNG = assetUrl('RR.png');
+const TT_PNG = assetUrl('TT.png');
 
 export default function CadillacDetail({ onBack, onGoHome, onNavigateContact }: { onBack: () => void; onGoHome: () => void; onNavigateContact: () => void }) {
   const [hovered, setHovered] = useState<string | null>(null);
@@ -102,7 +108,7 @@ export default function CadillacDetail({ onBack, onGoHome, onNavigateContact }: 
         >
           <div className="w-full overflow-hidden rounded-3xl border border-[#D8D4CE] p-6 sm:p-8 md:w-[75%]"
             style={{ background: '#F0EDE8', boxShadow: '0 0 40px rgba(182,0,168,0.08)' }}>
-            <img src="/QQ.png" alt="Cadillac hero section" className="w-full rounded-2xl object-cover" />
+            <img src={QQ_PNG} alt="Cadillac hero section" className="w-full rounded-2xl object-cover" />
           </div>
           <div className="flex flex-col justify-center gap-4 md:w-[22%]">
             <span className="text-xs font-medium uppercase tracking-[0.2em] text-[#D7E2EA]/30">Overview</span>
@@ -122,7 +128,7 @@ export default function CadillacDetail({ onBack, onGoHome, onNavigateContact }: 
         >
           <div className="w-full overflow-hidden rounded-3xl border border-[#D8D4CE] p-6 sm:p-8 md:w-[68%]"
             style={{ background: '#F0EDE8', boxShadow: '0 0 40px rgba(182,0,168,0.08)' }}>
-            <img src="/WW.png" alt="Cadillac model showcase" className="w-full rounded-2xl object-cover" />
+            <img src={WW_PNG} alt="Cadillac model showcase" className="w-full rounded-2xl object-cover" />
           </div>
           <div className="flex flex-col justify-center gap-4 md:w-[28%] md:pl-8">
             <span className="text-xs font-medium uppercase tracking-[0.2em] text-[#D7E2EA]/30">Hero & Navigation</span>
@@ -142,7 +148,7 @@ export default function CadillacDetail({ onBack, onGoHome, onNavigateContact }: 
         >
           <div className="w-full overflow-hidden rounded-3xl border border-[#D8D4CE] p-6 sm:p-8 md:w-[80%]"
             style={{ background: '#F0EDE8', boxShadow: '0 0 40px rgba(182,0,168,0.08)' }}>
-            <img src="/EE.png" alt="Cadillac vehicle configurator" className="w-full rounded-2xl object-cover" />
+            <img src={EE_PNG} alt="Cadillac vehicle configurator" className="w-full rounded-2xl object-cover" />
           </div>
           <div className="flex flex-col justify-center gap-4 md:w-[17%]">
             <span className="text-xs font-medium uppercase tracking-[0.2em] text-[#D7E2EA]/30">Model Showcase</span>
@@ -162,7 +168,7 @@ export default function CadillacDetail({ onBack, onGoHome, onNavigateContact }: 
         >
           <div className="w-full overflow-hidden rounded-3xl border border-[#D8D4CE] p-6 sm:p-8 md:w-[65%]"
             style={{ background: '#F0EDE8', boxShadow: '0 0 40px rgba(182,0,168,0.08)' }}>
-            <img src="/RR.png" alt="Cadillac responsive mobile view" className="w-full rounded-2xl object-cover" />
+            <img src={RR_PNG} alt="Cadillac responsive mobile view" className="w-full rounded-2xl object-cover" />
           </div>
           <div className="flex flex-col justify-center gap-4 md:w-[30%] md:pl-8">
             <span className="text-xs font-medium uppercase tracking-[0.2em] text-[#D7E2EA]/30">Responsive Design</span>
@@ -182,7 +188,7 @@ export default function CadillacDetail({ onBack, onGoHome, onNavigateContact }: 
         >
           <div className="w-full overflow-hidden rounded-3xl border border-[#D8D4CE] p-6 sm:p-8 md:w-[75%]"
             style={{ background: '#F0EDE8', boxShadow: '0 0 40px rgba(182,0,168,0.08)' }}>
-            <img src="/TT.png" alt="Cadillac design system" className="w-full rounded-2xl object-cover" />
+            <img src={TT_PNG} alt="Cadillac design system" className="w-full rounded-2xl object-cover" />
           </div>
           <div className="flex flex-col justify-center gap-4 md:w-[22%]">
             <span className="text-xs font-medium uppercase tracking-[0.2em] text-[#D7E2EA]/30">Design System</span>

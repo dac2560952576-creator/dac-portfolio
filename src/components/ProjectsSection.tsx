@@ -3,25 +3,26 @@ import { motion } from 'framer-motion';
 import SpotlightHeading from './SpotlightHeading';
 import LiveProjectButton from './LiveProjectButton';
 import BackgroundOrbs from './BackgroundOrbs';
+import { assetUrl } from '../utils/assetUrl';
 
 const projects = [
   {
     number: '01', category: 'UI/UX Design', name: 'Hotpot App',
-    image1: '/Q.png',
-    image2: '/R.png',
-    image3: '/Y.png',
+    image1: assetUrl('Q.png'),
+    image2: assetUrl('R.png'),
+    image3: assetUrl('Y.png'),
   },
   {
     number: '02', category: 'Web Development', name: 'Cadillac Web',
-    image1: '/QQ.png',
-    image2: '/RR.png',
-    image3: '/WW.png',
+    image1: assetUrl('QQ.png'),
+    image2: assetUrl('RR.png'),
+    image3: assetUrl('WW.png'),
   },
   {
     number: '03', category: 'UI Design', name: 'Game UI',
-    image1: '/A.png',
-    image2: '/S.png',
-    image3: '/D.png',
+    image1: assetUrl('A.png'),
+    image2: assetUrl('S.png'),
+    image3: assetUrl('D.png'),
   },
 ];
 

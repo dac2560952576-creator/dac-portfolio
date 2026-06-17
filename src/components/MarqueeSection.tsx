@@ -1,24 +1,25 @@
 import { useRef, useEffect, useState } from 'react';
 import BackgroundOrbs from './BackgroundOrbs';
+import { assetUrl } from '../utils/assetUrl';
 
 const row1Images = [
-  '/10.png',
-  '/11.png',
-  '/111.png',
-  '/112.png',
-  '/113.png',
-  '/114.png',
-  '/22.png',
+  assetUrl('10.png'),
+  assetUrl('11.png'),
+  assetUrl('111.png'),
+  assetUrl('112.png'),
+  assetUrl('113.png'),
+  assetUrl('114.png'),
+  assetUrl('22.png'),
 ];
 
 const row2Images = [
-  '/33.png',
-  '/44.png',
-  '/55.png',
-  '/66.png',
-  '/77.png',
-  '/88.png',
-  '/99.png',
+  assetUrl('33.png'),
+  assetUrl('44.png'),
+  assetUrl('55.png'),
+  assetUrl('66.png'),
+  assetUrl('77.png'),
+  assetUrl('88.png'),
+  assetUrl('99.png'),
 ];
 
 // One full set width for modulo wrapping

@@ -2,8 +2,14 @@ import { useState, useCallback } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import BrandText from './BrandText';
 import SpotlightHeading from './SpotlightHeading';
+import { assetUrl } from '../utils/assetUrl';
 
 const navLinks = ['About', 'Projects', 'Contact'];
+const A_PNG2 = assetUrl('A.png');
+const S_PNG = assetUrl('S.png');
+const D_PNG = assetUrl('D.png');
+const F_PNG = assetUrl('F.png');
+const H_PNG = assetUrl('H.png');
 
 export default function GameDetail({ onBack, onGoHome, onNavigateContact }: { onBack: () => void; onGoHome: () => void; onNavigateContact: () => void }) {
   const [hovered, setHovered] = useState<string | null>(null);
@@ -102,7 +108,7 @@ export default function GameDetail({ onBack, onGoHome, onNavigateContact }: { on
         >
           <div className="w-full overflow-hidden rounded-3xl border border-[#D8D4CE] p-6 sm:p-8 md:w-[75%]"
             style={{ background: '#F0EDE8', boxShadow: '0 0 40px rgba(182,0,168,0.08)' }}>
-            <img src="/A.png" alt="Game hero section" className="w-full rounded-2xl object-cover" />
+            <img src={A_PNG2} alt="Game hero section" className="w-full rounded-2xl object-cover" />
           </div>
           <div className="flex flex-col justify-center gap-4 md:w-[22%]">
             <span className="text-xs font-medium uppercase tracking-[0.2em] text-[#D7E2EA]/30">Overview</span>
@@ -122,7 +128,7 @@ export default function GameDetail({ onBack, onGoHome, onNavigateContact }: { on
         >
           <div className="w-full overflow-hidden rounded-3xl border border-[#D8D4CE] p-6 sm:p-8 md:w-[68%]"
             style={{ background: '#F0EDE8', boxShadow: '0 0 40px rgba(182,0,168,0.08)' }}>
-            <img src="/S.png" alt="Game model showcase" className="w-full rounded-2xl object-cover" />
+            <img src={S_PNG} alt="Game model showcase" className="w-full rounded-2xl object-cover" />
           </div>
           <div className="flex flex-col justify-center gap-4 md:w-[28%] md:pl-8">
             <span className="text-xs font-medium uppercase tracking-[0.2em] text-[#D7E2EA]/30">HUD Hero & Navigation Status</span>
@@ -142,7 +148,7 @@ export default function GameDetail({ onBack, onGoHome, onNavigateContact }: { on
         >
           <div className="w-full overflow-hidden rounded-3xl border border-[#D8D4CE] p-6 sm:p-8 md:w-[80%]"
             style={{ background: '#F0EDE8', boxShadow: '0 0 40px rgba(182,0,168,0.08)' }}>
-            <img src="/D.png" alt="Game vehicle configurator" className="w-full rounded-2xl object-cover" />
+            <img src={D_PNG} alt="Game vehicle configurator" className="w-full rounded-2xl object-cover" />
           </div>
           <div className="flex flex-col justify-center gap-4 md:w-[17%]">
             <span className="text-xs font-medium uppercase tracking-[0.2em] text-[#D7E2EA]/30">Inventory System</span>
@@ -162,7 +168,7 @@ export default function GameDetail({ onBack, onGoHome, onNavigateContact }: { on
         >
           <div className="w-full overflow-hidden rounded-3xl border border-[#D8D4CE] p-6 sm:p-8 md:w-[65%]"
             style={{ background: '#F0EDE8', boxShadow: '0 0 40px rgba(182,0,168,0.08)' }}>
-            <img src="/F.png" alt="Game responsive mobile view" className="w-full rounded-2xl object-cover" />
+            <img src={F_PNG} alt="Game responsive mobile view" className="w-full rounded-2xl object-cover" />
           </div>
           <div className="flex flex-col justify-center gap-4 md:w-[30%] md:pl-8">
             <span className="text-xs font-medium uppercase tracking-[0.2em] text-[#D7E2EA]/30">Game Interface Design</span>
@@ -182,7 +188,7 @@ export default function GameDetail({ onBack, onGoHome, onNavigateContact }: { on
         >
           <div className="w-full overflow-hidden rounded-3xl border border-[#D8D4CE] p-6 sm:p-8 md:w-[75%]"
             style={{ background: '#F0EDE8', boxShadow: '0 0 40px rgba(182,0,168,0.08)' }}>
-            <img src="/H.png" alt="Game design system" className="w-full rounded-2xl object-cover" />
+            <img src={H_PNG} alt="Game design system" className="w-full rounded-2xl object-cover" />
           </div>
           <div className="flex flex-col justify-center gap-4 md:w-[22%]">
             <span className="text-xs font-medium uppercase tracking-[0.2em] text-[#D7E2EA]/30">UI Kit</span>

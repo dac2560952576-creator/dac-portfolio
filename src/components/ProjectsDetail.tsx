@@ -3,6 +3,11 @@ import { motion, useSpring, useMotionValue } from 'framer-motion';
 import BrandText from './BrandText';
 import SpotlightHeading from './SpotlightHeading';
 import BackgroundOrbs from './BackgroundOrbs';
+import { assetUrl } from '../utils/assetUrl';
+
+const Q_PNG = assetUrl('Q.png');
+const QQ_PNG = assetUrl('QQ.png');
+const A_PNG = assetUrl('A.png');
 
 const navLinks = ['About', 'Projects', 'Contact'];
 
@@ -134,7 +139,7 @@ export default function ProjectsDetail({ onBack, onGoHome, onNavigateHotpot, onN
             className={`flex flex-col gap-4 border-t py-8 sm:flex-row sm:gap-10 sm:py-10 md:gap-12 md:py-12 ${project.number !== '' ? 'cursor-pointer transition-colors hover:bg-white/[0.02]' : ''}`}
             style={{ borderColor: 'rgba(215,226,234,0.25)' }}
             onMouseMove={(project.number === '01' || project.number === '02' || project.number === '03') ? (e) => { mouseX.set(e.clientX); mouseY.set(e.clientY); } : undefined}
-            onMouseEnter={(project.number === '01' || project.number === '02' || project.number === '03') ? () => { setPreviewSrc(project.number === '01' ? '/Q.png' : project.number === '02' ? '/QQ.png' : '/A.png'); setPreviewShow(true); } : undefined}
+            onMouseEnter={(project.number === '01' || project.number === '02' || project.number === '03') ? () => { setPreviewSrc(project.number === '01' ? Q_PNG : project.number === '02' ? QQ_PNG : A_PNG); setPreviewShow(true); } : undefined}
             onMouseLeave={(project.number === '01' || project.number === '02' || project.number === '03') ? () => setPreviewShow(false) : undefined}
             initial={{ opacity: 0, y: 30 }}
             animate={{ opacity: 1, y: 0 }}
@@ -194,16 +199,16 @@ export default function ProjectsDetail({ onBack, onGoHome, onNavigateHotpot, onN
           <div className="overflow-hidden" style={{ height: '450px' }}>
             <div
               className="transition-transform duration-500 ease-out"
-              style={{ transform: previewSrc === '/QQ.png' ? 'translateY(-450px)' : previewSrc === '/A.png' ? 'translateY(-900px)' : 'translateY(0)' }}
+              style={{ transform: previewSrc === QQ_PNG ? 'translateY(-450px)' : previewSrc === A_PNG ? 'translateY(-900px)' : 'translateY(0)' }}
             >
               <div style={{ height: '450px' }}>
-                <img src="/Q.png" alt="Hotpot App preview" className="h-full w-full object-cover" />
+                <img src={Q_PNG} alt="Hotpot App preview" className="h-full w-full object-cover" />
               </div>
               <div style={{ height: '450px' }}>
-                <img src="/QQ.png" alt="Cadillac Web preview" className="h-full w-full object-cover" />
+                <img src={QQ_PNG} alt="Cadillac Web preview" className="h-full w-full object-cover" />
               </div>
               <div style={{ height: '450px' }}>
-                <img src="/A.png" alt="Game UI preview" className="h-full w-full object-cover" />
+                <img src={A_PNG} alt="Game UI preview" className="h-full w-full object-cover" />
               </div>
             </div>
           </div>
