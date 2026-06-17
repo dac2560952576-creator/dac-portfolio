@@ -17,7 +17,7 @@ const PERSPECTIVE = 800;
 const ROTATE_X_MAX = 5; // degrees, up/down
 const ROTATE_Y_MAX = 7; // degrees, left/right
 
-export default function PortraitInteraction({ src = assetUrl('1.PNG') }: { src?: string }) {
+export default function PortraitInteraction({ src = assetUrl('1.png') }: { src?: string }) {
   const containerRef = useRef<HTMLDivElement>(null);
   const [rotateX, setRotateX] = useState(0);
   const [rotateY, setRotateY] = useState(0);
